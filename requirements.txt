@@ -1,3 +1,12 @@
 sphinx>=1.0
+-r doc/requirements.txt
+
+# -- TESTING:
 pytest>=2.0.2
 mock>=0.7
+
+# -- PYTHON2 BACKPORTS:
+pathlib;  python_version <= '3.4'
+
+# -- MORE:
+# tox

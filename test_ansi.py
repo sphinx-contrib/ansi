@@ -1,30 +1,53 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# SEE: https://github.com/sphinx-doc/sphinx/
 
+from __future__ import absolute_import, print_function
 from docutils import nodes
 from mock import Mock
+from pathlib import Path
+import pytest
+import sys
 
-from sphinxcontrib import ansi
+HERE = Path(__file__).parent.resolve()
+sys.path.insert(0, str(HERE))
+
+try:
+    from sphinxcontrib import ansi
+except ImportError as e:
+    print("IMPORT-ERROR: %s" % e)
+    for index, p in enumerate(sys.path):
+        print("{0:2d}.  {1}".format(index, p))
+    raise
 
 
 RAWSOURCE = '''\
 \x1b[1mfoo\x1b[33;1mbar\x1b[1;34mhello\x1b[0mworld\x1b[1m'''
 
 
-def pytest_funcarg__paragraph(request):
+# -----------------------------------------------------------------------------
+# FIXTURES:
+# -----------------------------------------------------------------------------
+@pytest.fixture
+def paragraph():
     paragraph = nodes.paragraph()
     paragraph.append(ansi.ansi_literal_block(RAWSOURCE, RAWSOURCE))
     return paragraph
 
 
-def pytest_funcarg__app(request):
+@pytest.fixture
+def app():
     return Mock()
 
 
-def pytest_funcarg__parser(request):
+@pytest.fixture
+def parser():
     return ansi.ANSIColorParser()
 
 
+# -----------------------------------------------------------------------------
+# TEST SUPPORT:
+# -----------------------------------------------------------------------------
 def _assert_colors(node, *colors):
     assert isinstance(node, nodes.inline)
     for color in colors:
@@ -36,6 +59,10 @@ def _assert_text(node, text):
     assert node.astext() == text
 
 
+
+# -----------------------------------------------------------------------------
+# TEST SUITE:
+# -----------------------------------------------------------------------------
 def test_parser_strip_colors(app, parser, paragraph):
     app.builder.name = 'foo'
     parser(app, paragraph, 'foo')
@@ -77,10 +104,9 @@ def test_setup(app):
                       ansi.ANSIColorParser)
 
 
-def main():
-    import py
-    py.cmdline.pytest()
-
-
+# -----------------------------------------------------------------------------
+# TEST MAIN:
+# -----------------------------------------------------------------------------
 if __name__ == '__main__':
-    main()
+    import pytest
+    pytest.main()
