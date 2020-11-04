@@ -1,3 +1,17 @@
+0.7.0 (UNRELEASED)
+=====================
+
+- docs: Changed URLs to github repository.
+- Add support for sphinx >= 2.0
+- Add support for newer python3 versions.
+- test: Fixed tests.
+
+RELATED:
+
+- OFFICIAL NEW REPO: https://github.com/sphinx-contrib/ansi
+- https://pypi.org/project/sphinxcontrib-ansi/0.6.dev20201023/
+  (tag missing; NOT REFLECTED on branch=master)
+
 0.6 (Jul 8, 2011)
 =================
 
