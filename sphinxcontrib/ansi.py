@@ -34,8 +34,10 @@
 """
 
 from __future__ import absolute_import, print_function
-import re
+import logging
+import os
 from os import path
+import re
 
 from docutils import nodes
 from docutils.parsers import rst
@@ -45,6 +47,13 @@ from sphinx.util.osutil import copyfile
 
 
 __version__ = '0.7.0'
+
+# -- DIAGNOSTIC SUPPORT:
+DIAG = os.environ.get("SPHINXCONTRIB_ANSI_DIAG", "no") == "yes"
+console = logging.getLogger("sphinxcontrib.ansi")
+console.setLevel(logging.ERROR)
+if DIAG:
+    console.setLevel(logging.INFO)
 
 
 class ansi_literal_block(nodes.literal_block):
@@ -125,6 +134,8 @@ class ANSIColorParser(object):
         # this holds the end of the last regex match
         last_end = 0
         # iterate over all color codes
+        console.warn("\nANSI_COLORIZE.block:\n{}\nANSI_COLORIZE.block.end\n".format(raw))
+
         for match in COLOR_PATTERN.finditer(raw):
             # add any text preceeding this match
             head = raw[last_end:match.start()]
@@ -173,7 +184,8 @@ class ANSIColorParser(object):
 def add_stylesheet(app):
     if app.config.html_ansi_stylesheet:
         # -- RemovedInSphinx40Warning:
-        # The app.add_stylesheet() is deprecated. Please use app.add_css_file() instead.
+        # The app.add_stylesheet() is deprecated. 
+        # Please use app.add_css_file() instead.
         if hasattr(app, 'add_css_file'):
             app.add_css_file('ansi.css')
         else:
@@ -225,3 +237,9 @@ def setup(app):
     app.connect('builder-inited', add_stylesheet)
     app.connect('build-finished', copy_stylesheet)
     app.connect('doctree-resolved', ANSIColorParser())
+
+    return {
+        'version': __version__,
+        'parallel_read_safe': True,
+        'parallel_write_safe': True,
+    }

@@ -29,11 +29,11 @@ from setuptools import setup, find_packages
 with open('README.rst') as stream:
     long_desc = stream.read()
 
-requires = ['Sphinx>=1.0b2']
+requires = ['sphinx>=1.0']
 
 setup(
     name='sphinxcontrib-ansi',
-    version='0.6.1',
+    version='0.7.0',
     url='https://github.com/sphinx-contrib/ansi',
     download_url='http://pypi.org/project/sphinxcontrib-ansi',
     license='BSD',
