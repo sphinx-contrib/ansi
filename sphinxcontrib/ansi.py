@@ -33,7 +33,7 @@
     .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
 """
 
-
+from __future__ import absolute_import, print_function
 import re
 from os import path
 
@@ -41,7 +41,10 @@ from docutils import nodes
 from docutils.parsers import rst
 from docutils.parsers.rst.directives import flag
 from sphinx.util.osutil import copyfile
-from sphinx.util.console import bold
+# DISABLED: from sphinx.util.console import bold
+
+
+__version__ = '0.7.0'
 
 
 class ansi_literal_block(nodes.literal_block):
@@ -169,19 +172,30 @@ class ANSIColorParser(object):
 
 def add_stylesheet(app):
     if app.config.html_ansi_stylesheet:
-        app.add_stylesheet('ansi.css')
+        # -- RemovedInSphinx40Warning:
+        # The app.add_stylesheet() is deprecated. Please use app.add_css_file() instead.
+        if hasattr(app, 'add_css_file'):
+            app.add_css_file('ansi.css')
+        else:
+            # -- SUPPORTS: sphinx < 2.0 ?
+            app.add_stylesheet('ansi.css')
 
 
 def copy_stylesheet(app, exception):
     if app.builder.name != 'html' or exception:
         return
+
+    verbose = hasattr(app, 'info')
     stylesheet = app.config.html_ansi_stylesheet
     if stylesheet:
-        app.info(bold('Copying ansi stylesheet... '), nonl=True)
+        if verbose:
+            # DISABLED; app.info(bold('Copying ansi stylesheet... '), nonl=True)
+            app.info('Copying ansi stylesheet... ', nonl=True)
         dest = path.join(app.builder.outdir, '_static', 'ansi.css')
         source = path.abspath(path.dirname(__file__))
         copyfile(path.join(source, stylesheet), dest)
-        app.info('done')
+        if verbose:
+            app.info('done')
 
 
 class ANSIBlockDirective(rst.Directive):
