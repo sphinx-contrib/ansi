@@ -33,15 +33,27 @@
     .. moduleauthor::  Sebastian Wiesner  <lunaryorn@googlemail.com>
 """
 
-
-import re
+from __future__ import absolute_import, print_function
+import logging
+import os
 from os import path
+import re
 
 from docutils import nodes
 from docutils.parsers import rst
 from docutils.parsers.rst.directives import flag
 from sphinx.util.osutil import copyfile
-from sphinx.util.console import bold
+# DISABLED: from sphinx.util.console import bold
+
+
+__version__ = '0.7.0'
+
+# -- DIAGNOSTIC SUPPORT:
+DIAG = os.environ.get("SPHINXCONTRIB_ANSI_DIAG", "no") == "yes"
+console = logging.getLogger("sphinxcontrib.ansi")
+console.setLevel(logging.ERROR)
+if DIAG:
+    console.setLevel(logging.INFO)
 
 
 class ansi_literal_block(nodes.literal_block):
@@ -122,6 +134,8 @@ class ANSIColorParser(object):
         # this holds the end of the last regex match
         last_end = 0
         # iterate over all color codes
+        console.warn("\nANSI_COLORIZE.block:\n{}\nANSI_COLORIZE.block.end\n".format(raw))
+
         for match in COLOR_PATTERN.finditer(raw):
             # add any text preceeding this match
             head = raw[last_end:match.start()]
@@ -169,19 +183,31 @@ class ANSIColorParser(object):
 
 def add_stylesheet(app):
     if app.config.html_ansi_stylesheet:
-        app.add_stylesheet('ansi.css')
+        # -- RemovedInSphinx40Warning:
+        # The app.add_stylesheet() is deprecated. 
+        # Please use app.add_css_file() instead.
+        if hasattr(app, 'add_css_file'):
+            app.add_css_file('ansi.css')
+        else:
+            # -- SUPPORTS: sphinx < 2.0 ?
+            app.add_stylesheet('ansi.css')
 
 
 def copy_stylesheet(app, exception):
     if app.builder.name != 'html' or exception:
         return
+
+    verbose = hasattr(app, 'info')
     stylesheet = app.config.html_ansi_stylesheet
     if stylesheet:
-        app.info(bold('Copying ansi stylesheet... '), nonl=True)
+        if verbose:
+            # DISABLED; app.info(bold('Copying ansi stylesheet... '), nonl=True)
+            app.info('Copying ansi stylesheet... ', nonl=True)
         dest = path.join(app.builder.outdir, '_static', 'ansi.css')
         source = path.abspath(path.dirname(__file__))
         copyfile(path.join(source, stylesheet), dest)
-        app.info('done')
+        if verbose:
+            app.info('done')
 
 
 class ANSIBlockDirective(rst.Directive):
@@ -211,3 +237,9 @@ def setup(app):
     app.connect('builder-inited', add_stylesheet)
     app.connect('build-finished', copy_stylesheet)
     app.connect('doctree-resolved', ANSIColorParser())
+
+    return {
+        'version': __version__,
+        'parallel_read_safe': True,
+        'parallel_write_safe': True,
+    }

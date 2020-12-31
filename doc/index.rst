@@ -12,8 +12,8 @@ HTML output.  Use this extension to correctly include the output of command
 line tools, which use these control sequences to color their output (like
 ``sphinx-build``, for instance).
 
-The extension is available under the terms of the BSD license, see LICENSE_
-for more information.
+The extension is available under the terms of the BSD license, 
+see LICENSE for more information.
 
 
 Installation
@@ -23,11 +23,11 @@ This extension can be installed from the Python Package Index::
 
    pip install sphinxcontrib-ansi
 
-Alternatively, you can clone the sphinx-contrib_ repository from BitBucket,
+Alternatively, you can clone the `sphinx-contrib/ansi`_ repository,
 and install the extension directly from the repository::
 
-   hg clone https://bitbucket.org/birkenfeld/sphinx-contrib
-   cd sphinx-contrib/ansi
+   git clone https://github.com/sphinx-contrib/ansi sphinxcontrib-ansi
+   cd sphinxcontrib-ansi
    python setup.py install
 
 
@@ -88,14 +88,19 @@ it known to sphinx by including the following code snippet in your
 .. code-block:: python
 
    def setup(app):
-       app.add_stylesheet('my_ansi_theme.css')
+       # -- NOTE: RemovedInSphinx40Warning:
+       # The app.add_stylesheet() is deprecated. Please use app.add_css_file() instead.
+       app.add_css_file('my_ansi_theme.css')
+
+       # OLDER-SOLUTION: sphinx <= 2.0
+       # app.add_stylesheet('my_ansi_theme.css')
 
 
 Contribution
 ------------
 
 Please contact the author or create an issue in the `issue tracker`_ of the
-sphinx-contrib_ repository, if you have found any bugs or miss some
+`sphinx-contrib/ansi`_ repository, if you have found any bugs or miss some
 functionality (e.g. support for more attributes).  Patches are welcome!
 
 
@@ -106,8 +111,13 @@ functionality (e.g. support for more attributes).  Patches are welcome!
    changes.rst
 
 
-.. _`Sphinx`: http://sphinx.pocoo.org/
-.. _`sphinx-contrib`: https://bitbucket.org/birkenfeld/sphinx-contrib
-.. _`issue tracker`: https://bitbucket.org/birkenfeld/sphinx-contrib/issues
-.. _`black-on-white.css`: https://bitbucket.org/birkenfeld/sphinx-contrib/src/tip/ansi/sphinxcontrib/black-on-white.css
-.. _LICENSE: https://bitbucket.org/birkenfeld/sphinx-contrib/src/tip/LICENSE
+.. _`Sphinx`: https://www.sphinx-doc.org/
+.. _`sphinx-contrib/ansi`: https://github.com/sphinx-contrib/ansi
+.. _`issue tracker`:       https://github.com/sphinx-contrib/ansi/issues
+.. _`black-on-white.css`:  https://github.com/sphinx-contrib/ansi/blob/master/sphinxcontrib/black-on-white.css
+
+.. hidden:
+
+   BROKEN: Missing on Github.
+   .. _LICENSE: https://bitbucket.org/birkenfeld/sphinx-contrib/src/tip/LICENSE
+

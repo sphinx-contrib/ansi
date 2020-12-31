@@ -26,29 +26,39 @@
 
 needs_sphinx = '1.0'
 
-extensions = ['sphinx.ext.intersphinx', 'sphinxcontrib.issuetracker']
+extensions = [
+    'sphinx.ext.intersphinx',
+    # DISABLED: 'sphinxcontrib.issuetracker',
+]
 
 source_suffix = '.rst'
 master_doc = 'index'
 
 project = u'sphinxcontrib-ansi'
-copyright = u'2010, 2011 Sebastian Wiesner'
-version = '0.6'
-release = '0.6'
+copyright = u'2010, 2011 Sebastian Wiesner; 2020 Jens Engel (since 0.6.1)'
+version = '0.7.0'
+release = '0.7.0'
 
-exclude_patterns = ['_build/*']
+exclude_patterns = ['build/*', '_build/*']
 
 html_theme = 'default'
 html_static_path = []
 
-intersphinx_mapping = {'python': ('http://docs.python.org/', None),
-                       'sphinx': ('http://sphinx.pocoo.org/', None)}
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/', None),
+    # DISABLED: 'sphinx': ('https://sphinx-doc.org/', 'sphinx-inv.txt'),
+}
 
-issuetracker = 'bitbucket'
-issuetracker_user = 'birkenfeld'
+issuetracker = 'github'
 issuetracker_project = 'sphinx-contrib'
+issuetracker_user = 'birkenfeld'
 
 
 def setup(app):
-    app.add_description_unit('confval', 'confval',
-                             'pair: %s; configuration value')
+    if hasattr(app, 'add_object_type'):
+        app.add_object_type('confval', 'confval',
+                            'pair: %s; configuration value')
+    else:
+        # -- SUPPORTS: sphinx < 2.0
+        app.add_description_unit('confval', 'confval',
+                                 'pair: %s; configuration value')

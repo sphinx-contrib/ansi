@@ -22,6 +22,7 @@ MANIFEST
 .cache
 .hypothesis/
 .pytest_cache/
+py*-tests.xml
 
 # Sphinx documentation
 docs/_build/
