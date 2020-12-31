@@ -147,23 +147,12 @@ jobs:
         --skip-missing-interpreters false
         -vv
       env:
-        TOXENV: ${{ matrix.tox_env }}-core,${{ matrix.tox_env }}-ansible29,${{ matrix.tox_env }}-devel
-    # sequential run improves browsing experience (almost no speed impact)
-    - name: "Test with tox: ${{ matrix.tox_env }}-core"
+        TOXENV: ${{ matrix.tox_env }}
+    - name: "Test with tox: ${{ matrix.tox_env }}"
       run: |
         python3 -m tox
       env:
-        TOXENV: ${{ matrix.tox_env }}-core
-    - name: "Test with tox: ${{ matrix.tox_env }}-ansible29"
-      run: |
-        python3 -m tox
-      env:
-        TOXENV: ${{ matrix.tox_env }}-ansible29
-    - name: "Test with tox: ${{ matrix.tox_env }}-devel"
-      run: |
-        python3 -m tox
-      env:
-        TOXENV: ${{ matrix.tox_env }}-devel
+        TOXENV: ${{ matrix.tox_env }}
 
   publish:
     name: Publish to PyPI registry
