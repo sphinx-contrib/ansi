@@ -66,6 +66,7 @@ If you do not like the builtin stylesheets, set
 This stylesheet must provide styles for the following CSS classes:
 
 - ``ansi-bold``: Bold text
+- ``ansi-dark``: Dark text
 - ``ansi-underscore``: Underlined text
 - ``ansi-black``: Black colour
 - ``ansi-red``: Red colour
