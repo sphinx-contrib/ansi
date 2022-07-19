@@ -29,7 +29,7 @@ from setuptools import setup, find_packages
 with open('README.rst') as stream:
     long_desc = stream.read()
 
-requires = ['sphinx>=1.0']
+requires = ['sphinx>=1.6']
 
 setup(
     name='sphinxcontrib-ansi',

@@ -7,6 +7,10 @@
     font-weight: bold;
 }
 
+.ansi-dark {
+    opacity: 0.7;
+}
+
 .ansi-black {
     color: #000000;
 }
@@ -102,4 +106,3 @@
 .ansi-bg_white {
     background-color: #b2b2b2;
 }
-
